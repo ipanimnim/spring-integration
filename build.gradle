@@ -72,6 +72,7 @@ ext {
     jaxbVersion = '3.0.2'
     jeroMqVersion = '0.5.2'
     jmsApiVersion = '3.0.0'
+    jodaTimeVersion = '2.10.14'
     jpaApiVersion = '3.0.2'
     jrubyVersion = '9.3.3.0'
     jschVersion = '0.1.55'
@@ -97,6 +98,7 @@ ext {
     saajVersion = '2.0.1'
     servletApiVersion = '5.0.0'
     smackVersion = '4.4.5'
+    splunkVersion = '1.6.5.0'
     springAmqpVersion = project.hasProperty('springAmqpVersion') ? project.springAmqpVersion : '3.0.0-M2'
     springDataVersion = project.hasProperty('springDataVersion') ? project.springDataVersion : '2022.0.0-M3'
     springGraphqlVersion = '1.0.0-M6'
@@ -476,6 +478,23 @@ project('spring-integration-amqp') {
     }
 }
 
+project('spring-integration-cassandra') {
+    // TODO: d
+    description = 'Spring Integration AMQP Support'
+    dependencies {
+        api project(':spring-integration-core')
+        api("org.springframework.amqp:spring-rabbit:$springAmqpVersion") {
+            exclude group: 'org.springframework'
+        }
+
+        testImplementation("org.springframework.amqp:spring-rabbit-junit:$springAmqpVersion") {
+            exclude group: 'org.springframework'
+        }
+        testImplementation project(':spring-integration-stream')
+        testImplementation 'org.springframework:spring-web'
+    }
+}
+
 project('spring-integration-core') {
     description = 'Spring Integration Core'
 
@@ -548,6 +567,14 @@ project('spring-integration-core') {
                 }
             }
         }
+    }
+}
+
+project('spring-integration-etcd') {
+    // TODO
+    description = 'Spring Integration ApplicationEvent Support'
+    dependencies {
+        api project(':spring-integration-core')
     }
 }
 
@@ -625,6 +652,21 @@ project('spring-integration-graphql') {
 }
 
 project('spring-integration-groovy') {
+    description = 'Spring Integration Groovy Support'
+    dependencies {
+        api project(':spring-integration-scripting')
+        api "org.codehaus.groovy:groovy:$groovyVersion"
+        api 'org.springframework:spring-context-support'
+
+        testImplementation 'org.springframework:spring-web'
+
+        testRuntimeOnly "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
+    }
+}
+
+
+project('spring-integration-groovy-dsl') {
+    // TODO
     description = 'Spring Integration Groovy Support'
     dependencies {
         api project(':spring-integration-scripting')
@@ -868,6 +910,33 @@ project('spring-integration-sftp') {
         testImplementation "org.apache.sshd:sshd-core:$apacheSshdVersion"
         testImplementation project(':spring-integration-event')
         testImplementation project(':spring-integration-file').sourceSets.test.output
+    }
+}
+
+project('spring-integration-splunk') {
+    description = 'Spring Integration Splunk Support'
+    dependencies {
+        api project(':spring-integration-core')
+        optionalApi 'org.springframework:spring-websocket'
+        api "com.splunk:splunk:$splunkVersion"
+        api "joda-time:joda-time:$jodaTimeVersion"
+
+        testImplementation project(':spring-integration-test')
+        testImplementation project(':spring-integration-stream')
+    }
+}
+
+project('spring-integration-smb') {
+    //TODO
+    description = 'Spring Integration Splunk Support'
+    dependencies {
+        api project(':spring-integration-core')
+        optionalApi 'org.springframework:spring-websocket'
+        api "com.splunk:splunk:$splunkVersion"
+        api "joda-time:joda-time:$jodaTimeVersion"
+
+        testImplementation project(':spring-integration-test')
+        testImplementation project(':spring-integration-stream')
     }
 }
 
